@@ -1,6 +1,10 @@
 # 1. Build Stage
 FROM node:22-alpine AS builder
 
+# Secure Build-Time Variable Injection (Evaluation Support)
+ARG VITE_GEMINI_API_KEY
+ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci

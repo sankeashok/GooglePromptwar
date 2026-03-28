@@ -20,8 +20,13 @@ function App() {
 
   useEffect(() => {
     const savedKey = localStorage.getItem('gemini_api_key');
+    const envKey = import.meta.env.VITE_GEMINI_API_KEY;
+    
+    // Automatically adopt the Production Fallback key if provided by the environment
     if (savedKey) {
       setApiKey(savedKey);
+    } else if (envKey) {
+      setApiKey(envKey);
     } else {
       setShowSettings(true);
     }
