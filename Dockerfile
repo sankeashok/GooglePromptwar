@@ -12,8 +12,10 @@ RUN npm ci
 # Copy all files (respects .dockerignore)
 COPY . .
 
-# Build Vite payload
-RUN npm run build
+# Build Vite payload with secure variable injection
+RUN touch .env.production && \
+    echo "VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY" >> .env.production && \
+    npm run build
 
 
 # 2. Serve Stage
