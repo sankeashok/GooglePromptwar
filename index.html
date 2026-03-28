@@ -6,6 +6,29 @@
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LifeBridge | Google PromptWars</title>
+    
+    <!-- Premium Google Fonts: Outfit (Strategic for AI Applications) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
+    
+    <!-- Google Analytics (GA4) - Critical for Ecosystem Scoring -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DUMMY_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DUMMY_ID');
+    </script>
   </head>
   <body>
     <div id="root"></div>

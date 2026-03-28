@@ -1,17 +1,15 @@
 :root {
-  --bg-color: #0d1117;
-  --surface: #161b22;
-  --surface-border: rgba(255, 255, 255, 0.1);
-  --primary: #58a6ff;
-  --primary-hover: #3182ce;
-  --text: #c9d1d9;
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --bg-color: #0b0e14;
+  --surface-color: rgba(22, 27, 34, 0.7);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --primary: #3b82f6;
+  --primary-glow: rgba(59, 130, 246, 0.25);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --urgent: #ef4444;
+  --text-main: #f0f6fc;
   --text-muted: #8b949e;
-  --danger: #f85149;
-  --danger-bg: rgba(248, 81, 73, 0.1);
-  --warning: #d29922;
-  --warning-bg: rgba(210, 153, 34, 0.1);
-  --success: #2ea043;
-  --success-bg: rgba(46, 160, 67, 0.1);
 }
 
 * {
@@ -21,11 +19,78 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: var(--font-main);
   background-color: var(--bg-color);
-  color: var(--text);
+  color: var(--text-main);
+  min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Global Feed Masterpiece Sidebar Styles */
+.global-feed {
+  background: var(--surface-color);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  margin-top: 2rem;
+  max-width: 400px;
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.feed-header h4 {
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.feed-item {
+  padding: 1rem 0;
+  border-top: 1px solid var(--surface-border);
+  animation: slideIn 0.3s ease-out;
+}
+
+.item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.severity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.severity-dot.critical { background: var(--urgent); box-shadow: 0 0 8px var(--urgent); }
+.severity-dot.high { background: var(--warning); }
+.severity-dot.medium { background: var(--primary); }
+
+.item-summary {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.pulse { animation: pulse 2s infinite; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .app-container {

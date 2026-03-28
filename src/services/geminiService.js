@@ -1,5 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+/**
+ * @constant {string} systemInstruction
+ * The core system prompt that transforms Gemini into the LifeBridge Intent Resolution Engine.
+ * Forces zero-hallucination JSON extraction of life-saving data.
+ */
 const systemInstruction = `
 You are 'LifeBridge', an advanced AI system acting as a universal bridge between messy human intent and complex response systems.
 Your task is to take unstructured inputs (like voice transcripts, weather records, news, medical history, or accident scene descriptions) and instantly convert them into structured, verified, and life-saving actions.

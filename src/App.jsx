@@ -3,6 +3,7 @@ import { Activity, Settings, X } from 'lucide-react';
 import { resolveIntent, PROVIDERS } from './services/intentResolver';
 import InputPanel from './components/InputPanel';
 import ActionDashboard from './components/ActionDashboard';
+import GlobalFeed from './components/GlobalFeed';
 
 function App() {
   const [inputText, setInputText] = useState('');
@@ -132,6 +133,8 @@ function App() {
           isLoading={isLoading} 
           apiKey={apiKey}
         />
+        
+        <GlobalFeed />
       </main>
 
       {showSettings && (
