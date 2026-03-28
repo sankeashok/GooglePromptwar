@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Activity, Settings, X } from 'lucide-react';
-import { processIntent } from './services/geminiService';
+import { resolveIntent, PROVIDERS } from './services/intentResolver';
 import InputPanel from './components/InputPanel';
 import ActionDashboard from './components/ActionDashboard';
 
@@ -49,7 +49,7 @@ function App() {
     setResponseData(null);
 
     try {
-      const result = await processIntent(apiKey, inputText, imageBase64, imageMimeType);
+      const result = await resolveIntent(PROVIDERS.GEMINI, apiKey, inputText, imageBase64, imageMimeType);
       
       if (result.error) {
         setError(result.error);

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "medical_01",
+    "name": "Medical Emergency (Myocardial Infarction)",
+    "input": "My husband is 62 and is clutching his chest, he says it feels like an elephant is sitting on it. He has cold sweats and is turning pale. We are at 123 Maple St. He has a history of high cholesterol. I'm so scared, what do I do?",
+    "expected": {
+      "emergencyLevel": "CRITICAL",
+      "urgent": true,
+      "classification": "MEDICAL",
+      "entitiesIncluded": ["age", "symptoms", "location", "medicalHistory"]
+    }
+  },
+  {
+    "id": "traffic_01",
+    "name": "Multi-Vehicle Accident",
+    "input": "There's a massive car crash on the highway, maybe 3 or 4 cars. One is flipped over and I see smoke. People are trapped inside the blue sedan. I'm calling from I-95 North, near Exit 10. The traffic is backing up fast.",
+    "expected": {
+      "emergencyLevel": "CRITICAL",
+      "urgent": true,
+      "classification": "RESCUE",
+      "entitiesIncluded": ["location", "hazards", "victims"]
+    }
+  },
+  {
+    "id": "weather_01",
+    "name": "Flash Flood Warning",
+    "input": "The weather alert says the creek is going to flash flood in the next 30 minutes. My basement is already taking on water and the street is starting to look like a river. I'm in the low-lying part of the valley near the bridge.",
+    "expected": {
+      "emergencyLevel": "HIGH",
+      "urgent": true,
+      "classification": "WEATHER",
+      "entitiesIncluded": ["hazard", "timeframe", "location"]
+    }
+  }
+]
