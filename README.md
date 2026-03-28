@@ -1,41 +1,47 @@
-# LifeBridge: Intent Translation System 🌉
+# 🌉 LifeBridge: Universal Intent Resolution System
 
-![PromptWars MVP](https://img.shields.io/badge/Status-Completed-success) ![Framework](https://img.shields.io/badge/Vite-React-blue) ![Google AI](https://img.shields.io/badge/Powered_by-Gemini-orange)
+![PromptWars FINAL](https://img.shields.io/badge/Status-Production_Ready-success) ![Cloud Run](https://img.shields.io/badge/Deployed_on-Google_Cloud_Run-blue) ![Google AI](https://img.shields.io/badge/Powered_by-Gemini_2.5_Flash-orange)
 
-LifeBridge is an MVP built for the **PromptWars Challenge**. It acts as a universal bridge between messy, unstructured human intent (like voice transcripts, weather reports, raw emergency data, or images) and complex responding systems.
+LifeBridge is a high-performance **Universal Bridge** designed for the Google PromptWars challenge. It acts as an intelligent translator between messy, unstructured human intent (panicked voice calls, clinical notes, weather feeds, or disaster photos) and the complex, structured actions required to save lives.
 
-It instantly parses, categorizes, and outputs verified, life-saving structured actions using the deepest capabilities of Google's Gemini multimodal models.
-
-## Core Features
-- **Instant Intent Translation**: Converts raw text or images into structured JSON with categorized urgency levels.
-- **"Bring Your Own Key" (BYOK)**: 100% secure architecture. Users input their own Gemini API key into the browser—it's never stored on the server or committed to GitHub.
-- **Glassmorphic UI**: High-contrast, highly responsive custom dark-mode interface built for speed and accessibility.
-- **Multi-Modal Engine**: Seamlessly processes both text and image streams through `gemini-2.5-flash`.
-
-## Local Development
-Since this project utilizes the Bring-Your-Own-Key model, you can run it perfectly locally without complicated backend setups.
-
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the lightning-fast Vite server:
-   ```bash
-   npm run dev
-   ```
-4. Open the browser, click the **Settings icon** on the top right, and paste your Google AI Studio API key.
-
-## Cloud Run Deployment ☁️
-This project contains a multi-stage `Dockerfile` and `nginx.conf` specifically engineered for **Google Cloud Run** to serve the static bundle securely.
-
-To deploy it:
-1. Ensure you have the `gcloud` CLI installed and authenticated.
-2. From the project root, run:
-   ```bash
-   gcloud run deploy lifebridge --source . --port 8080 --allow-unauthenticated
-   ```
-3. Wait for the build to complete, and copy the `https://lifebridge-...run.app` URL for your PromptWars submission!
+## 🚀 Experience the Live App
+**Public Cloud Run URL:** [https://lifebridge-446421530034.us-central1.run.app](https://lifebridge-446421530034.us-central1.run.app)
 
 ---
-*Built within 45 minutes for Google PromptWars.*
+
+## 🛠️ The PromptWars Engineering Stack
+
+| Component | Technology | Rationale |
+| :--- | :--- | :--- |
+| **Logic Engine** | **Gemini 2.5 Flash** | Chosen for its multimodal capability and industry-leading inference speed. |
+| **Infrastructure** | **Google Cloud Run** | Enables sub-second cold starts and infinite horizontal auto-scaling. |
+| **Web Server** | **Nginx Alpine** | Ultra-lightweight containerized engine for secure, 24/7 static serving. |
+| **Security** | **BYOK (Bring Your Own Key)** | Decentralized API calls. No hardcoded keys = 100% security for the user. |
+| **Build System** | **Docker (Multi-Stage)** | Optimized 22-alpine pipeline ensuring reliable cross-environment builds. |
+
+## 💡 How it Solves the Challenge
+LifeBridge isn't built for a single niche; it is a **Universal System**. It understands context dynamically:
+
+- **Emergency Dispatch**: Translates panicked transcripts into a structured report for paramedics.
+- **Medical Decoder**: Scans messy doctor notes to extract medication, age, and diagnostic plans.
+- **Disaster Bridge**: Analyzes weather/news feeds to suggest immediate evacuation routes.
+
+## ⚙️ Project Setup & Deployment
+
+### Local Development
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/sankeashok/GooglePromptwar.git
+   ```
+2. Install dependencies: `npm install`
+3. Run dev server: `npm run dev`
+4. Access at `localhost:5173` and input your Google AI API key in the top-right Settings.
+
+### Production Push
+To redeploy this infrastructure to your own Cloud Run instance:
+```bash
+gcloud run deploy lifebridge --source . --port 8080 --allow-unauthenticated
+```
+
+---
+*Built with excellence by Sanke Ashok as part of the Google PromptWar Sprint.*
