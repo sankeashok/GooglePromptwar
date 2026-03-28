@@ -30,12 +30,7 @@ describe('Gemini Service', () => {
   });
 
   it('should process input text and return structured JSON', async () => {
-    // We mock the API key through process.env in setupTests if needed, 
-    // but the file uses import.meta.env which Vite handles or Vitest polyfills.
-    // For this test, our mock genAI handles the response.
-    vi.stubEnv('VITE_GEMINI_API_KEY', 'test_key');
-
-    const result = await processIntent('There is a crash on highway 1');
+    const result = await processIntent('dummy_key', 'There is a crash on highway 1');
 
     expect(result).toBeDefined();
     expect(result.emergencyLevel).toBe('HIGH');
@@ -45,7 +40,7 @@ describe('Gemini Service', () => {
   });
 
   it('should return error if no input provided', async () => {
-    const result = await processIntent('');
+    const result = await processIntent('dummy_key', '');
     expect(result.error).toBe('No input provided.');
   });
 });

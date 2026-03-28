@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Activity, ShieldAlert } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Activity, Settings, X } from 'lucide-react';
 import { processIntent } from './services/geminiService';
 import InputPanel from './components/InputPanel';
 import ActionDashboard from './components/ActionDashboard';
@@ -14,7 +14,31 @@ function App() {
   const [error, setError] = useState('');
   const [responseData, setResponseData] = useState(null);
 
+  const [apiKey, setApiKey] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
+
+  useEffect(() => {
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) {
+      setApiKey(savedKey);
+    } else {
+      setShowSettings(true);
+    }
+  }, []);
+
+  const saveApiKey = (key) => {
+    localStorage.setItem('gemini_api_key', key);
+    setApiKey(key);
+    setShowSettings(false);
+  };
+
   const handleProcessIntent = async () => {
+    if (!apiKey) {
+      setError("Please configure your Gemini API Key in settings first.");
+      setShowSettings(true);
+      return;
+    }
+
     if (!inputText.trim() && !imageBase64) {
       setError("Please provide some text or an image.");
       return;
@@ -25,7 +49,7 @@ function App() {
     setResponseData(null);
 
     try {
-      const result = await processIntent(inputText, imageBase64, imageMimeType);
+      const result = await processIntent(apiKey, inputText, imageBase64, imageMimeType);
       
       if (result.error) {
         setError(result.error);
@@ -34,7 +58,7 @@ function App() {
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to process input. Check console for details.");
+      setError("Failed to process input. Check console or verify your API key.");
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +106,13 @@ function App() {
         <div style={{color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 'auto'}}>
           AI Intent resolution system
         </div>
+        <button 
+          className="button" 
+          style={{ background: 'transparent', padding: '0.5rem', color: 'var(--text)' }}
+          onClick={() => setShowSettings(true)}
+        >
+          <Settings size={20} />
+        </button>
       </header>
 
       <main className="main-content">
@@ -101,6 +132,35 @@ function App() {
           isLoading={isLoading}
         />
       </main>
+
+      {showSettings && (
+        <div className="modal-overlay">
+          <div className="modal-content panel">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ margin: 0 }}>Settings</h2>
+              <button 
+                onClick={() => setShowSettings(false)} 
+                style={{ background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              Enter your Google Gemini API Key. It is stored securely in your browser's local storage and never sent to our servers.
+            </p>
+            <input 
+              type="password" 
+              placeholder="AIzaSy..." 
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              className="api-input"
+            />
+            <button className="button" onClick={() => saveApiKey(apiKey)}>
+              Save Key
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

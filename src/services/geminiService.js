@@ -1,13 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-if (!API_KEY) {
-  console.warn("VITE_GEMINI_API_KEY is missing. Please set it in your .env file.");
-}
-
-const genAI = new GoogleGenerativeAI(API_KEY || "dummy_key");
-
 const systemInstruction = `
 You are 'LifeBridge', an advanced AI system acting as a universal bridge between messy human intent and complex response systems.
 Your task is to take unstructured inputs (like voice transcripts, weather records, news, medical history, or accident scene descriptions) and instantly convert them into structured, verified, and life-saving actions.
@@ -29,10 +21,12 @@ The JSON must strictly conform to this schema:
 }
 `;
 
-export async function processIntent(text, imageBase64 = null, imageMimeType = null) {
-  if (!API_KEY) {
-     throw new Error("Gemini API Key is missing. Please add VITE_GEMINI_API_KEY to your .env file.");
+export async function processIntent(apiKey, text, imageBase64 = null, imageMimeType = null) {
+  if (!apiKey) {
+     throw new Error("API Key is missing. Please configure it in settings.");
   }
+
+  const genAI = new GoogleGenerativeAI(apiKey);
 
   try {
     const model = genAI.getGenerativeModel({
@@ -54,7 +48,7 @@ export async function processIntent(text, imageBase64 = null, imageMimeType = nu
                data: imageBase64,
                mimeType: imageMimeType
            }
-       })
+       });
     }
     
     // Fallback if empty

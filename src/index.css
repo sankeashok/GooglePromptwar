@@ -255,3 +255,40 @@ textarea:focus {
   margin-top: 1rem;
   object-fit: contain;
 }
+
+/* Modal CSS */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+}
+
+.api-input {
+  width: 100%;
+  background: var(--bg-color);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+
+.api-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
