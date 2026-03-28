@@ -29,9 +29,9 @@ async function runIntensityTest(concurrentUsers = 50) {
     console.log(`✅ Intensity Test Complete!`);
     console.log(`-----------------------------------`);
     console.log(`Concurrent Users:    ${concurrentUsers}`);
-    Total Wall-Clock Time: ${totalTime.toFixed(2)}ms`);
-    Avg Resolution Time:  ${avgDuration.toFixed(2)}ms`);
-    Max Latency:          ${maxDuration.toFixed(2)}ms`);
+    console.log(`Total Wall-Clock Time: ${totalTime.toFixed(2)}ms`);
+    console.log(`Avg Resolution Time:  ${avgDuration.toFixed(2)}ms`);
+    console.log(`Max Latency:          ${maxDuration.toFixed(2)}ms`);
     console.log(`-----------------------------------\n`);
 
   } catch (error) {
