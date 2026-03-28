@@ -4,17 +4,17 @@
  * You can swap Gemini for any future LLM by creating a new adapter.
  */
 
-import { processIntent as geminiProcess } from './geminiService';
+import { processIntent as geminiResolver } from './geminiService';
 
+/**
+ * Supported AI Providers for the LifeBridge Hub.
+ * @enum {string}
+ */
 export const PROVIDERS = {
-  GEMINI: 'GEMINI',
-  // Future providers can be added here (e.g., CLAUDE, OPENAI)
+  GEMINI: 'gemini'
 };
 
 /**
- * Resolves messy intent using the selected AI provider.
- * @param {string} provider - The ID of the AI provider.
- * @param {string} apiKey - The user's API key.
  * @param {string} text - Unstructured text input.
  * @param {string} imageBase64 - Optional image data.
  * @param {string} imageMimeType - Optional image mime type.
