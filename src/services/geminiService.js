@@ -16,7 +16,7 @@ The JSON must strictly conform to this schema:
     "Array of clear, life-saving or urgent steps to take immediately."
   ],
   "structuredData": {
-    "key": "value (extract any relevant entities like location, patient info, hazards, etc.)"
+    "key": "value (extract any relevant entities like location, patient info, hazards, etc. IMPORTANT: If a location is found, include 'latitude' and 'longitude' if you can estimate or resolve them accurately into decimals.)"
   }
 }
 `;

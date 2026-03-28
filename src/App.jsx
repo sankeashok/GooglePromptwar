@@ -128,8 +128,9 @@ function App() {
         />
         
         <ActionDashboard 
-          responseData={responseData}
-          isLoading={isLoading}
+          responseData={responseData} 
+          isLoading={isLoading} 
+          apiKey={apiKey}
         />
       </main>
 

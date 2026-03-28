@@ -1,5 +1,6 @@
 import React from 'react';
-import { AlertTriangle, Tag, CheckCircle, Activity, Info } from 'lucide-react';
+import { AlertTriangle, Tag, CheckCircle, Activity, Info, MapPin } from 'lucide-react';
+import EmergencyMap from './EmergencyMap';
 
 const ActionDashboard = ({ responseData, isLoading }) => {
   if (isLoading) {
@@ -26,6 +27,9 @@ const ActionDashboard = ({ responseData, isLoading }) => {
     emergencyLevel === 'CRITICAL' ? 'critical' : 
     emergencyLevel === 'HIGH' ? 'high' : 
     'medium';
+
+  const lat = structuredData?.latitude;
+  const lng = structuredData?.longitude;
 
   return (
     <div className="panel output-panel">
