@@ -30,16 +30,16 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       systemInstruction: systemInstruction,
       generationConfig: {
-        responseMimeType: "application/json",
+        responseMimeType: "application/json"
       }
     });
 
     const parts = [];
     if (text) {
-      parts.push({ text });
+      parts.push({ text: "USER INTENT:\n" + text });
     }
 
     if (imageBase64 && imageMimeType) {
@@ -62,11 +62,22 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
     console.log(`Gemini inference took ${(end - start).toFixed(2)}ms`);
 
     const response = await result.response;
-    const jsonText = response.text();
+    let jsonText = response.text();
     
-    return JSON.parse(jsonText);
+    // Sometimes Gemini wraps JSON in backticks even with responseMimeType set
+    jsonText = jsonText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+
+    try {
+      return JSON.parse(jsonText);
+    } catch (parseErr) {
+      console.warn("Failed to parse Gemini JSON output:", jsonText);
+      return { 
+        error: "Our AI systems could not confidently structure your intent. Please try adding more detail." 
+      };
+    }
   } catch (error) {
     console.error("Error calling Gemini API:", error);
-    throw error;
+    // Return the specific api error if it exists
+    throw new Error(error.message || "Connection to Gemini failed. Please verify your API Key and internet connection.");
   }
 }

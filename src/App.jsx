@@ -58,7 +58,7 @@ function App() {
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to process input. Check console or verify your API key.");
+      setError(err?.message || "Failed to process input. Check console or verify your API key.");
     } finally {
       setIsLoading(false);
     }
