@@ -3,7 +3,9 @@ FROM node:22-alpine AS builder
 
 # Secure Build-Time Variable Injection (Evaluation Support)
 ARG VITE_GEMINI_API_KEY
+ARG VITE_COMMIT_HASH
 ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+ENV VITE_COMMIT_HASH=$VITE_COMMIT_HASH
 
 WORKDIR /app
 COPY package*.json ./
@@ -15,6 +17,7 @@ COPY . .
 # Build Vite payload with secure variable injection
 RUN touch .env.production && \
     echo "VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY" >> .env.production && \
+    echo "VITE_COMMIT_HASH=$VITE_COMMIT_HASH" >> .env.production && \
     npm run build
 
 

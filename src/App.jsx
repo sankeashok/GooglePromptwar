@@ -170,6 +170,15 @@ function App() {
           </div>
         </div>
       )}
+
+      <footer className="footer">
+        <div className="footer-content">
+          <span>&copy; 2026 LifeBridge | Google PromptWars</span>
+          <span className="version-tag">
+            Build: {import.meta.env.VITE_COMMIT_HASH || 'DEV'}
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
