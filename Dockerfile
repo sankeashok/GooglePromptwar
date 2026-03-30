@@ -12,7 +12,7 @@ ENV VITE_COMMIT_HASH=$VITE_COMMIT_HASH
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --include=dev
 
 # Copy all files (respects .dockerignore)
 COPY . .
