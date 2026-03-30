@@ -22,7 +22,7 @@ export const PROVIDERS = {
 export async function resolveIntent(provider, apiKey, text, imageBase64, imageMimeType) {
   switch (provider) {
     case PROVIDERS.GEMINI:
-      return await geminiProcess(apiKey, text, imageBase64, imageMimeType);
+      return await geminiResolver(apiKey, text, imageBase64, imageMimeType);
     
     default:
       throw new Error(`Unsupported AI Provider: ${provider}`);
