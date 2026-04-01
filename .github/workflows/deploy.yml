@@ -45,6 +45,8 @@ jobs:
           project_id: '${{ env.PROJECT_ID }}'
           env_vars: |
             VITE_GEMINI_API_KEY=${{ env.VITE_GEMINI_API_KEY }}
+          build_vars: |
+            VITE_GEMINI_API_KEY=${{ env.VITE_GEMINI_API_KEY }}
           flags: '--allow-unauthenticated --port 8080'
 
       - name: Show Output URL
