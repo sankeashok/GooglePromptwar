@@ -33,15 +33,19 @@ function App() {
   });
 
   const [showSettings, setShowSettings] = useState(() => {
-    try {
-      const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
-      if (hasEnv) return false; // Never show on load if env key is present
+    // 1. If we are in production, never show on load
+    if (import.meta.env.PROD) return false;
 
+    // 2. If env key is present and valid, don't show
+    const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
+    if (hasEnv) return false;
+
+    // 3. Otherwise, check localStorage (if available)
+    try {
       const hasSaved = !!localStorage.getItem('gemini_api_key');
       return !hasSaved;
     } catch {
-      const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
-      return !hasEnv;
+      return true; // Conservative fallback
     }
   });
 
