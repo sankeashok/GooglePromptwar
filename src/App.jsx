@@ -206,7 +206,7 @@ function App() {
         <div className="footer-content">
           <span>&copy; 2026 LifeBridge | Powered by Gemini 2.5 Flash</span>
           <span className="version-tag">
-            Build: {(import.meta.env.VITE_APP_ENV === 'production' ? 'PROD' : (import.meta.env.VITE_APP_ENV || (import.meta.env.PROD ? 'PROD' : 'DEV'))).toUpperCase()} ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
+            Build: V1.0-{(import.meta.env.VITE_APP_ENV === 'production' ? 'PROD' : (import.meta.env.VITE_APP_ENV || (import.meta.env.PROD ? 'PROD' : 'DEV'))).toUpperCase()} ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
           </span>
         </div>
       </footer>
