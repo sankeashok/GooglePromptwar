@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Radio, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Radio, Clock } from 'lucide-react';
 import { query, collection, orderBy, limit, onSnapshot, getFirestore } from 'firebase/firestore';
 
 /**
@@ -31,7 +31,7 @@ const GlobalFeed = () => {
 
 
       return () => unsubscribe();
-    } catch (e) {
+    } catch {
       console.warn("Global Feed: Live connection pending Firebase initialization.");
     }
   }, []);

@@ -4,6 +4,7 @@ import { resolveIntent, PROVIDERS } from './services/intentResolver';
 import InputPanel from './components/InputPanel';
 import ActionDashboard from './components/ActionDashboard';
 import GlobalFeed from './components/GlobalFeed';
+import { logEmergencyEvent } from './services/firebaseService';
 
 function App() {
   const [inputText, setInputText] = useState('');
@@ -25,8 +26,7 @@ function App() {
       if (saved && saved.trim().length > 10) return saved;
       
       return '';
-    } catch (e) {
-      console.warn("localStorage access denied:", e);
+    } catch {
       const env = import.meta.env.VITE_GEMINI_API_KEY;
       return (env && env.trim().length > 10) ? env : '';
     }
@@ -39,7 +39,7 @@ function App() {
 
       const hasSaved = !!localStorage.getItem('gemini_api_key');
       return !hasSaved;
-    } catch (e) {
+    } catch {
       const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
       return !hasEnv;
     }
@@ -57,8 +57,8 @@ function App() {
         setApiKey(activeKey);
         setShowSettings(false); // Force hide if any key is valid
       }
-    } catch (e) {
-      console.warn("Effect: localStorage access denied:", e);
+    } catch {
+      console.warn("Effect: localStorage access denied:");
     }
   }, []);
 
@@ -66,8 +66,8 @@ function App() {
   const saveApiKey = (key) => {
     try {
       localStorage.setItem('gemini_api_key', key);
-    } catch (e) {
-      console.warn("Failed to save to localStorage:", e);
+    } catch (_) {
+      console.warn("Failed to save to localStorage:", _);
     }
     setApiKey(key);
     setShowSettings(false);
@@ -97,6 +97,12 @@ function App() {
         setError(result.error);
       } else {
         setResponseData(result);
+        
+        // Log to Firestore for the Global Disaster Feed
+        // Only if it's an emergency (Level CRITICAL/HIGH/MEDIUM)
+        if (['CRITICAL', 'HIGH', 'MEDIUM'].includes(result.emergencyLevel)) {
+          logEmergencyEvent(result);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -191,13 +197,13 @@ function App() {
               </button>
             </div>
             <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-              Enter your Google Gemini API Key. It is stored securely in your browser's local storage and never sent to our servers.
+              Enter your Google Gemini API Key. It is stored securely in your browser&apos;s local storage and never sent to our servers.
             </p>
             <input 
               type="password" 
               placeholder="AIzaSy..." 
               value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
+              onChange={(evt) => setApiKey(evt.target.value)}
               className="api-input"
             />
             <button className="button" onClick={() => saveApiKey(apiKey)}>

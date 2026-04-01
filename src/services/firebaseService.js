@@ -1,16 +1,15 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "firebase/firestore";
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-// Firebase configuration placeholder
-// This allows the app to be future-proof for Real-time Disaster Feed.
+// Firebase configuration
+// Prioritizes environment variables for production security (VITE_ prefix required for Vite)
 const firebaseConfig = {
-  apiKey: "AIzaSy...", // Will be overridden by user or proxy
-  authDomain: "lifebridge-alert.firebaseapp.com",
-  projectId: "lifebridge-alert",
-  storageBucket: "lifebridge-alert.firebasestorage.app",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSy...", 
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "lifebridge-alert.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "lifebridge-alert",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "lifebridge-alert.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef"
 };
 
 let db = null;
@@ -20,7 +19,7 @@ export const initFirebase = (customConfig) => {
     const app = initializeApp(customConfig || firebaseConfig);
     db = getFirestore(app);
     return true;
-  } catch (e) {
+  } catch {
     console.warn("Firebase initialization skipped (No config found). Scoring remains functional.");
     return false;
   }

@@ -6,7 +6,7 @@ let commitHash = process.env.VITE_COMMIT_HASH || '';
 if (!commitHash) {
   try {
     commitHash = execSync('git rev-parse --short=4 HEAD').toString().trim();
-  } catch (e) {
+  } catch {
     commitHash = 'LIVE'; // Fallback if no git info available
   }
 }
