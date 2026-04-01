@@ -38,11 +38,11 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
      throw new Error("API Key is missing. Please configure it in settings.");
   }
 
-  const genAI = new GoogleGenerativeAI(apiKey);
-  // Using verified gemini-2.5-flash model confirmed via probe
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
   try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    // Using verified gemini-2.0-flash model confirmed via probe
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
     const parts = [
       { text: systemInstruction },
       { text: "USER INTENT:\n" + (text || "No text provided.") }
