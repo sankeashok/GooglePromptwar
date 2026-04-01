@@ -64,10 +64,39 @@ body {
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .copyright-text {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    text-align: center;
+    width: 100%;
+  }
+  .footer-content {
+    justify-content: center;
+  }
+}
+
 .version-tag {
-  background: var(--surface-border);
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.1rem 0;
+  opacity: 0.15;
+  font-size: 0.75rem;
+  transition: opacity 0.3s ease;
+  user-select: none;
+}
+
+.version-tag:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .version-tag {
+    font-size: 0.6rem;
+    opacity: 0.08;
+  }
+}
+
+.config-status {
+  margin-left: 0.5rem;
 }
 
 

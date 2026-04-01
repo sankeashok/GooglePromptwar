@@ -218,12 +218,16 @@ function App() {
       )}
 
       <footer className="footer">
-        <div className="footer-content">
-          <span>&copy; 2026 LifeBridge | Developed by Ashok Sanke | Powered by Gemini 2.5 Flash</span>
+        <div className="footer-content" style={{ flexWrap: 'wrap', gap: '0.5rem', flexDirection: 'column', textAlign: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center' }}>
+            <span className="copyright-text">
+              &copy; 2026 LifeBridge | Developed by <a href="https://www.linkedin.com/in/ashok-sanke/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none', transition: 'color 0.2s' }}>Ashok Sanke</a> | Powered by Gemini 2.5 Flash
+            </span>
+          </div>
           <span className="version-tag">
             Build: V1.1-PROD ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
             {import.meta.env.PROD && (
-              <span className="config-status" style={{ marginLeft: '1rem', opacity: 0.7, fontSize: '0.8rem' }}>
+              <span className="config-status">
                 Config: {
                   import.meta.env.VITE_GEMINI_API_KEY?.length > 10 ? 'G·ok' : 'G·missing'
                 } {
