@@ -44,9 +44,9 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Standardizing on 'gemini-1.5-flash' for maximum compatibility.
+    // Standardizing on 'gemini-2.5-flash' for maximum compatibility.
     // This model is widely available and provides excellent intent resolution.
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const parts = [
       { text: systemInstruction },
@@ -97,7 +97,7 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
     
     // Handle Model Not Found (404)
     if (errorStr.includes("404") || errorLower.includes("not found")) {
-      return { error: "CONFIGURATION ERROR: Model 'gemini-1.5-flash' not found. Please verify your project has access to this model." };
+      return { error: "CONFIGURATION ERROR: Model 'gemini-2.5-flash' not found. Please verify your project has access to this model." };
     }
     
     return { error: `AI Processing Failed: ${errorStr}` };

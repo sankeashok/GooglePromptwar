@@ -219,7 +219,7 @@ function App() {
 
       <footer className="footer">
         <div className="footer-content">
-          <span>&copy; 2026 LifeBridge | Powered by Gemini 1.5 Flash</span>
+          <span>&copy; 2026 LifeBridge | Powered by Gemini 2.5 Flash</span>
           <span className="version-tag">
             Build: V1.1-PROD ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
             {import.meta.env.PROD && (
