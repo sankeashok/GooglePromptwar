@@ -25,7 +25,10 @@ const GlobalFeed = () => {
           ...doc.data()
         }));
         setEvents(eventList);
+      }, (err) => {
+        console.error("Firestore onSnapshot error:", err);
       });
+
 
       return () => unsubscribe();
     } catch (e) {

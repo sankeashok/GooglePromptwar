@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertTriangle, Tag, CheckCircle, Activity, Info, MapPin } from 'lucide-react';
 import EmergencyMap from './EmergencyMap';
 
-const ActionDashboard = ({ responseData, isLoading }) => {
+const ActionDashboard = ({ responseData, isLoading, apiKey }) => {
   if (isLoading) {
     return (
       <div className="panel output-panel" style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -80,13 +80,23 @@ const ActionDashboard = ({ responseData, isLoading }) => {
             {Object.entries(structuredData).map(([key, value]) => (
               <React.Fragment key={key}>
                 <div className="data-key">{key}</div>
-                <div className="data-value">{value}</div>
+                <div className="data-value">{typeof value === 'object' ? JSON.stringify(value) : value}</div>
               </React.Fragment>
             ))}
           </div>
         </div>
       )}
+
+      {lat && lng && (
+        <div className="card" style={{ borderLeft: '4px solid var(--primary)' }}>
+          <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <MapPin size={18} color="var(--primary)" /> Tactical Location Map
+          </div>
+          <EmergencyMap lat={lat} lng={lng} apiKey={apiKey} />
+        </div>
+      )}
     </div>
+
   );
 };
 

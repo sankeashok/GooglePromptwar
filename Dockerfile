@@ -1,27 +1,20 @@
-# 1. Build Stage
-FROM node:22-alpine AS builder
-
-# Force Production Environment
-ENV NODE_ENV=production
-
-# Secure Build-Time Variable Injection (Evaluation Support)
-ARG VITE_GEMINI_API_KEY
-ARG VITE_COMMIT_HASH
-ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
-ENV VITE_COMMIT_HASH=$VITE_COMMIT_HASH
-
+# Build stage
+FROM node:20-slim AS builder
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --include=dev
-
-# Copy all files (respects .dockerignore)
+RUN npm install
 COPY . .
 
-# Build Vite payload with secure variable injection
-RUN touch .env.production && \
-    echo "VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY" >> .env.production && \
-    echo "VITE_COMMIT_HASH=$VITE_COMMIT_HASH" >> .env.production && \
-    npm run build
+# Explicitly pass build args for Vite
+ARG VITE_GEMINI_API_KEY
+ARG VITE_APP_ENV=production
+
+# Ensure they are available during CMD execution and npm run build
+ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+ENV VITE_APP_ENV=$VITE_APP_ENV
+
+RUN npm run build
 
 
 # 2. Serve Stage

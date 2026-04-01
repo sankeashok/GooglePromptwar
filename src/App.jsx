@@ -15,28 +15,59 @@ function App() {
   const [error, setError] = useState('');
   const [responseData, setResponseData] = useState(null);
 
-  const [apiKey, setApiKey] = useState('');
-  const [showSettings, setShowSettings] = useState(false);
+  const [apiKey, setApiKey] = useState(() => {
+    try {
+      const saved = localStorage.getItem('gemini_api_key');
+      if (saved && saved.trim().length > 10) return saved;
+      const env = import.meta.env.VITE_GEMINI_API_KEY;
+      if (env && env.trim().length > 10) return env;
+      return '';
+    } catch (e) {
+      console.warn("localStorage access denied:", e);
+      const env = import.meta.env.VITE_GEMINI_API_KEY;
+      return (env && env.trim().length > 10) ? env : '';
+    }
+  });
+
+  const [showSettings, setShowSettings] = useState(() => {
+    try {
+      const hasSaved = !!localStorage.getItem('gemini_api_key');
+      const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
+      return !hasSaved && !hasEnv;
+    } catch (e) {
+      const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
+      return !hasEnv;
+    }
+  });
 
   useEffect(() => {
-    const savedKey = localStorage.getItem('gemini_api_key');
-    const envKey = import.meta.env.VITE_GEMINI_API_KEY;
-    
-    // Automatically adopt the Production Fallback key if provided by the environment
-    if (savedKey) {
-      setApiKey(savedKey);
-    } else if (envKey) {
-      setApiKey(envKey);
-    } else {
-      setShowSettings(true);
+    try {
+      const savedKey = localStorage.getItem('gemini_api_key');
+      const envKey = import.meta.env.VITE_GEMINI_API_KEY;
+      
+      const activeKey = (savedKey && savedKey.length > 10) ? savedKey : 
+                        (envKey && envKey.length > 10) ? envKey : null;
+
+      if (activeKey) {
+        setApiKey(activeKey);
+        setShowSettings(false); // Force hide if any key is valid
+      }
+    } catch (e) {
+      console.warn("Effect: localStorage access denied:", e);
     }
   }, []);
 
+
   const saveApiKey = (key) => {
-    localStorage.setItem('gemini_api_key', key);
+    try {
+      localStorage.setItem('gemini_api_key', key);
+    } catch (e) {
+      console.warn("Failed to save to localStorage:", e);
+    }
     setApiKey(key);
     setShowSettings(false);
   };
+
 
   const handleProcessIntent = async () => {
     if (!apiKey) {
@@ -175,7 +206,7 @@ function App() {
         <div className="footer-content">
           <span>&copy; 2026 LifeBridge | Google PromptWars</span>
           <span className="version-tag">
-            Build: {import.meta.env.VITE_COMMIT_HASH || 'DEV'}
+            Build: {(import.meta.env.VITE_APP_ENV === 'production' ? 'PROD' : (import.meta.env.VITE_APP_ENV || (import.meta.env.PROD ? 'PROD' : 'DEV'))).toUpperCase()} ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
           </span>
         </div>
       </footer>

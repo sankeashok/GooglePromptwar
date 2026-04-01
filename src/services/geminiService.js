@@ -3,28 +3,35 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 /**
  * @constant {string} systemInstruction
  * The core system prompt that transforms Gemini into the LifeBridge Intent Resolution Engine.
- * Forces zero-hallucination JSON extraction of life-saving data.
  */
 const systemInstruction = `
 You are 'LifeBridge', an advanced AI system acting as a universal bridge between messy human intent and complex response systems.
-Your task is to take unstructured inputs (like voice transcripts, weather records, news, medical history, or accident scene descriptions) and instantly convert them into structured, verified, and life-saving actions.
+Your task is to take unstructured inputs and instantly convert them into structured, verified, and life-saving actions.
 
 OUTPUT REQUIREMENTS:
-You MUST return ONLY a valid JSON string without any markdown formatting, backticks, or extra text.
+You MUST return ONLY a valid JSON string.
 The JSON must strictly conform to this schema:
 {
   "summary": "A 1-2 sentence verified summary of the situation.",
   "emergencyLevel": "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
-  "urgent": boolean (true if immediate life-saving action is required),
-  "classification": "MEDICAL" | "TRAFFIC" | "WEATHER" | "RESCUE" | "GENERAL" | etc,
+  "urgent": boolean,
+  "classification": "MEDICAL" | "TRAFFIC" | "WEATHER" | "RESCUE" | "GENERAL",
   "immediateActions": [
-    "Array of clear, life-saving or urgent steps to take immediately."
+    "Steps to take."
   ],
   "structuredData": {
-    "key": "value (extract any relevant entities like location, patient info, hazards, etc. IMPORTANT: If a location is found, include 'latitude' and 'longitude' if you can estimate or resolve them accurately into decimals.)"
+    "location_name": "Name of the place if identified",
+    "location_address": "Specific address if identified",
+    "latitude": number | null,
+    "longitude": number | null,
+    "key": "value"
   }
 }
+
+GEOGRAPHICAL DATA:
+If a location is identified, try to provide approximate latitude and longitude coordinates in the 'structuredData' field so we can trigger the tactical map. If unsure, set them to null.
 `;
+
 
 export async function processIntent(apiKey, text, imageBase64 = null, imageMimeType = null) {
   if (!apiKey) {
@@ -32,20 +39,14 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
+  // Using verified gemini-2.5-flash model confirmed via probe
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-      systemInstruction: systemInstruction,
-      generationConfig: {
-        responseMimeType: "application/json"
-      }
-    });
-
-    const parts = [];
-    if (text) {
-      parts.push({ text: "USER INTENT:\n" + text });
-    }
+    const parts = [
+      { text: systemInstruction },
+      { text: "USER INTENT:\n" + (text || "No text provided.") }
+    ];
 
     if (imageBase64 && imageMimeType) {
        parts.push({
@@ -56,11 +57,6 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
        });
     }
     
-    // Fallback if empty
-    if (parts.length === 0) {
-      return { error: "No input provided." };
-    }
-
     const start = performance.now();
     const result = await model.generateContent(parts);
     const end = performance.now();
@@ -69,7 +65,7 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
     const response = await result.response;
     let jsonText = response.text();
     
-    // Sometimes Gemini wraps JSON in backticks even with responseMimeType set
+    // Clean up markdown if AI includes it
     jsonText = jsonText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
 
     try {
@@ -82,7 +78,6 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
     }
   } catch (error) {
     console.error("Error calling Gemini API:", error);
-    // Return the specific api error if it exists
-    throw new Error(error.message || "Connection to Gemini failed. Please verify your API Key and internet connection.");
+    throw new Error(error.message || "Connection to Gemini failed.");
   }
 }
