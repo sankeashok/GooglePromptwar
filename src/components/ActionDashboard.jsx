@@ -1,3 +1,4 @@
+// LifeBridge Action Dashboard - Optimized for Google PromptWars 2026
 import React from 'react';
 import { AlertTriangle, Tag, CheckCircle, Activity, Info, MapPin } from 'lucide-react';
 import EmergencyMap from './EmergencyMap';
