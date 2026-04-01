@@ -221,7 +221,16 @@ function App() {
         <div className="footer-content">
           <span>&copy; 2026 LifeBridge | Powered by Gemini 1.5 Flash</span>
           <span className="version-tag">
-            Build: V1.1-{(import.meta.env.VITE_APP_ENV === 'production' ? 'PROD' : (import.meta.env.VITE_APP_ENV || (import.meta.env.PROD ? 'PROD' : 'DEV'))).toUpperCase()} ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
+            Build: V1.1-PROD ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
+            {import.meta.env.PROD && (
+              <span className="config-status" style={{ marginLeft: '1rem', opacity: 0.7, fontSize: '0.8rem' }}>
+                Config: {
+                  import.meta.env.VITE_GEMINI_API_KEY?.length > 10 ? 'G·ok' : 'G·missing'
+                } {
+                  import.meta.env.VITE_FIREBASE_API_KEY?.length > 10 ? 'F·ok' : 'F·missing'
+                }
+              </span>
+            )}
           </span>
         </div>
       </footer>
