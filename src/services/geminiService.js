@@ -38,10 +38,15 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
      throw new Error("API Key is missing. Please configure it in settings.");
   }
 
+  if (!text && !imageBase64) {
+      return { error: "No input provided." };
+  }
+
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Using verified gemini-2.0-flash model confirmed via probe
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    // Standardizing on 'gemini-1.5-flash' for maximum compatibility.
+    // This model is widely available and provides excellent intent resolution.
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const parts = [
       { text: systemInstruction },
@@ -71,19 +76,28 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
 
   } catch (error) {
     const errorStr = String(error);
+    const errorLower = errorStr.toLowerCase();
     console.error("Gemini Technical Error:", errorStr);
     
     // Handle Quota Exceeded (429)
-    if (errorStr.includes("429") || errorStr.toLowerCase().includes("quota")) {
+    if (errorStr.includes("429") || errorLower.includes("quota")) {
       return { 
         error: "API QUOTA EXCEEDED: You have hit the Gemini free-tier rate limit (15 requests/min). Please wait 60 seconds and try again.",
         isQuotaError: true
       };
     }
 
-    // Handle Leaked Key (403)
-    if (errorStr.toLowerCase().includes("leaked") || errorStr.includes("403") || error.status === 403) {
-       return { error: "CRITICAL: Current API key has been flagged as leaked. Please update VITE_GEMINI_API_KEY secret in GitHub." };
+    // Handle Leaked/Invalid/Blocked Key (403)
+    if (errorLower.includes("leaked") || errorLower.includes("key") || errorStr.includes("403")) {
+       return { 
+         error: "CRITICAL: Current API key is invalid, leaked, or restricted. Please update VITE_GEMINI_API_KEY secret in GitHub.",
+         isInvalidKey: true 
+       };
+    }
+    
+    // Handle Model Not Found (404)
+    if (errorStr.includes("404") || errorLower.includes("not found")) {
+      return { error: "CONFIGURATION ERROR: Model 'gemini-1.5-flash' not found. Please verify your project has access to this model." };
     }
     
     return { error: `AI Processing Failed: ${errorStr}` };

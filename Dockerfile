@@ -6,11 +6,12 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Explicitly pass build args for Vite
+# Explicitly pass build args for Vite (Required for 'source: .' deploys)
 ARG VITE_GEMINI_API_KEY
 ARG VITE_APP_ENV=production
 
-# Ensure they are available during CMD execution and npm run build
+# Ensure they are available during 'npm run build'
+# Vite looks for variables starting with VITE_ in the environment
 ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
 ENV VITE_APP_ENV=$VITE_APP_ENV
 

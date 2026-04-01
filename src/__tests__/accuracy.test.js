@@ -9,8 +9,9 @@ vi.mock('@google/generative-ai', () => {
       getGenerativeModel() {
         return {
           generateContent: vi.fn(async (parts) => {
-             // For logic testing, we return a standardized response based on parts
-             const textPart = parts.find(p => p.text)?.text || "";
+             // We look for the part that contains the USER INTENT label
+             const intentPart = parts.find(p => p.text?.includes("USER INTENT"))?.text || "";
+             const textPart = (intentPart || parts.find(p => p.text)?.text || "").toLowerCase();
              
              // Dynamic mock response logic based on input text
              let res = {

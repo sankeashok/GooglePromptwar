@@ -17,10 +17,13 @@ function App() {
 
   const [apiKey, setApiKey] = useState(() => {
     try {
-      const saved = localStorage.getItem('gemini_api_key');
-      if (saved && saved.trim().length > 10) return saved;
+      // Prioritize environment variable in production
       const env = import.meta.env.VITE_GEMINI_API_KEY;
       if (env && env.trim().length > 10) return env;
+
+      const saved = localStorage.getItem('gemini_api_key');
+      if (saved && saved.trim().length > 10) return saved;
+      
       return '';
     } catch (e) {
       console.warn("localStorage access denied:", e);
@@ -31,9 +34,11 @@ function App() {
 
   const [showSettings, setShowSettings] = useState(() => {
     try {
-      const hasSaved = !!localStorage.getItem('gemini_api_key');
       const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
-      return !hasSaved && !hasEnv;
+      if (hasEnv) return false; // Never show on load if env key is present
+
+      const hasSaved = !!localStorage.getItem('gemini_api_key');
+      return !hasSaved;
     } catch (e) {
       const hasEnv = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.length > 10);
       return !hasEnv;
@@ -204,7 +209,7 @@ function App() {
 
       <footer className="footer">
         <div className="footer-content">
-          <span>&copy; 2026 LifeBridge | Powered by Gemini 2.5 Flash</span>
+          <span>&copy; 2026 LifeBridge | Powered by Gemini 1.5 Flash</span>
           <span className="version-tag">
             Build: V1.1-{(import.meta.env.VITE_APP_ENV === 'production' ? 'PROD' : (import.meta.env.VITE_APP_ENV || (import.meta.env.PROD ? 'PROD' : 'DEV'))).toUpperCase()} ({(__COMMIT_HASH__ || '????').slice(-4).toUpperCase()})
           </span>

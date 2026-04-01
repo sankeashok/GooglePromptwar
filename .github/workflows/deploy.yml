@@ -11,8 +11,39 @@ env:
   VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
 jobs:
-  deploy:
+  ci:
+    name: "CI: Build and Test"
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
+          VITE_APP_ENV: production
+
+  deploy:
+    name: "CD: Deploy to Cloud Run"
+    needs: ci
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     permissions:
       contents: 'read'
@@ -30,11 +61,6 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
-
-      - name: 'Diagnostic: Check Config'
-        run: |
-          gcloud config list
-          gcloud auth list
 
       - name: Build and Deploy to Cloud Run
         uses: 'google-github-actions/deploy-cloudrun@v2'
