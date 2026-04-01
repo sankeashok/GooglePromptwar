@@ -31,9 +31,15 @@ jobs:
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
 
+      - name: 'Diagnostic: Check Config'
+        run: |
+          gcloud config list
+          gcloud auth list
+
       - name: Build and Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --project ${{ env.PROJECT_ID }} \
             --source . \
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
