@@ -69,25 +69,23 @@ export async function processIntent(apiKey, text, imageBase64 = null, imageMimeT
     const cleanedJson = jsonText.replace(/```json|```/g, "").trim();
     return JSON.parse(cleanedJson);
 
-    } catch (error) {
-      const errorStr = String(error);
-      console.error("Gemini Technical Error:", errorStr);
-      
-      // Handle Quota Exceeded (429)
-      if (errorStr.includes("429") || errorStr.toLowerCase().includes("quota")) {
-        return { 
-          error: "API QUOTA EXCEEDED: You have hit the Gemini free-tier rate limit (15 requests/min). Please wait 60 seconds and try again.",
-          isQuotaError: true
-        };
-      }
+  } catch (error) {
+    const errorStr = String(error);
+    console.error("Gemini Technical Error:", errorStr);
+    
+    // Handle Quota Exceeded (429)
+    if (errorStr.includes("429") || errorStr.toLowerCase().includes("quota")) {
+      return { 
+        error: "API QUOTA EXCEEDED: You have hit the Gemini free-tier rate limit (15 requests/min). Please wait 60 seconds and try again.",
+        isQuotaError: true
+      };
+    }
 
-      // Handle Leaked Key (403)
-      if (errorStr.toLowerCase().includes("leaked") || errorStr.includes("403") || error.status === 403) {
-         return { error: "CRITICAL: Current API key has been flagged as leaked. Please update VITE_GEMINI_API_KEY secret in GitHub." };
-      }
+    // Handle Leaked Key (403)
+    if (errorStr.toLowerCase().includes("leaked") || errorStr.includes("403") || error.status === 403) {
        return { error: "CRITICAL: Current API key has been flagged as leaked. Please update VITE_GEMINI_API_KEY secret in GitHub." };
     }
     
-    return { error: `AI Processing Failed: ${error.message}` };
+    return { error: `AI Processing Failed: ${errorStr}` };
   }
 }
