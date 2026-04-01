@@ -37,16 +37,15 @@ jobs:
           gcloud auth list
 
       - name: Build and Deploy to Cloud Run
-        run: |
-          gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --project "${{ env.PROJECT_ID }}" \
-            --source . \
-            --region "${{ env.REGION }}" \
-            --allow-unauthenticated \
-            --platform managed \
-            --set-build-env-vars VITE_GEMINI_API_KEY="${{ env.VITE_GEMINI_API_KEY }}" \
-            --port 8080 \
-            --quiet
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: '${{ env.SERVICE_NAME }}'
+          region: '${{ env.REGION }}'
+          source: .
+          project_id: '${{ env.PROJECT_ID }}'
+          env_vars: |
+            VITE_GEMINI_API_KEY=${{ env.VITE_GEMINI_API_KEY }}
+          flags: '--allow-unauthenticated --port 8080'
 
       - name: Show Output URL
         run: |
